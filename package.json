@@ -1,10 +1,10 @@
 {
   "name": "postcss-less-loader",
-  "version": "0.1.0-beta",
+  "version": "0.1.0-alpha.0",
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config jest.config.js"
   },
   "keywords": [],
   "author": "",
@@ -14,5 +14,16 @@
     "postcss": "^7.0.11",
     "postcss-less-engine-latest": "^1.0.0",
     "schema-utils": "^1.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.4.5",
+    "css-loader": "^2.1.0",
+    "jest": "^23.6.0",
+    "less": "^3.9.0",
+    "memory-fs": "^0.4.1",
+    "postcss-load-config": "^2.0.0",
+    "postcss-loader": "^3.0.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.28.4"
   }
 }

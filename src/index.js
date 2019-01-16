@@ -1,8 +1,10 @@
+const path = require('path');
 const postcss = require('postcss');
 const postcssLess = require('postcss-less-engine-latest');
 const { getOptions } = require('loader-utils');
 const parseOptions = require('./options');
 const validateOptions = require('schema-utils');
+const postcssrc = require('postcss-load-config');
 const SyntaxError = require('./Error')
 
 module.exports = function(css, map, meta) {
@@ -15,13 +17,58 @@ module.exports = function(css, map, meta) {
     const sourceMap = options.sourceMap;
 
     Promise.resolve().then(() => {
-        return parseOptions.call(this, options)
+        const length = Object.keys(options)
+            .filter((option) => {
+                switch (option) {
+                case 'ident':
+                case 'config':
+                case 'sourceMap':
+                    return
+                default:
+                    return option
+                }
+            }).length;
+
+        if (length) {
+            return parseOptions.call(this, options);
+        }
+        const rc = {
+            path: path.dirname(file),
+            ctx: {
+              file: {
+                extname: path.extname(file),
+                dirname: path.dirname(file),
+                basename: path.basename(file)
+              },
+              options: {}
+            }
+          }
+      
+          if (options.config) {
+            if (options.config.path) {
+              rc.path = path.resolve(options.config.path)
+            }
+      
+            if (options.config.ctx) {
+              rc.ctx.options = options.config.ctx
+            }
+          }
+      
+          rc.ctx.webpack = this;
+      
+          return postcssrc(rc.ctx, rc.path)
       }).then((config) => {
         if (!config) {
           config = {}
         }
     
-        let plugins = config.plugins || []
+        let plugins = config.plugins || [];
+        if (config.file) this.addDependency(config.file)
+
+        // Disable override `to` option from `postcss.config.js`
+        if (config.options.to) delete config.options.to
+        // Disable override `from` option from `postcss.config.js`
+        if (config.options.from) delete config.options.from
     
         let options = Object.assign({
           from: file,
@@ -51,14 +98,12 @@ module.exports = function(css, map, meta) {
         if (sourceMap && map) {
           options.map.prev = map
         }
-    
         return postcss([postcssLess()].concat(plugins))
-                .process(css, {
-                    from: file,
+                .process(css, Object.assign({}, options, {
                     parser: postcssLess.parser
-                })
+                }))
                 .then(result => {
-                    let { css, map, root, processor, messages } = result
+                    let { css, map, root, processor, messages } = result;
     
                     result.warnings().forEach((warning) => {
                         this.emitWarning(new Warning(warning))
