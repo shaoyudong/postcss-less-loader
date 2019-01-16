@@ -54,6 +54,7 @@ module.exports = function(css, map, meta) {
     
         return postcss([postcssLess()].concat(plugins))
                 .process(css, {
+                    from: file,
                     parser: postcssLess.parser
                 })
                 .then(result => {
