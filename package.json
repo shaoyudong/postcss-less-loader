@@ -21,6 +21,7 @@
     "jest": "^23.6.0",
     "less": "^3.9.0",
     "memory-fs": "^0.4.1",
+    "postcss-less-engine": "^0.6.2",
     "postcss-load-config": "^2.0.0",
     "postcss-loader": "^3.0.0",
     "style-loader": "^0.23.1",

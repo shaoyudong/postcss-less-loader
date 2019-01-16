@@ -61,7 +61,6 @@ module.exports = function(css, map, meta) {
         if (!config) {
           config = {}
         }
-    
         let plugins = config.plugins || [];
         if (config.file) this.addDependency(config.file)
 
@@ -98,7 +97,9 @@ module.exports = function(css, map, meta) {
         if (sourceMap && map) {
           options.map.prev = map
         }
-        return postcss([postcssLess()].concat(plugins))
+        return postcss([
+            postcssLess()
+        ].concat(plugins))
                 .process(css, Object.assign({}, options, {
                     parser: postcssLess.parser
                 }))

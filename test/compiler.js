@@ -18,7 +18,9 @@ module.exports = (fixture, options = {}) => {
                     loader: path.join(__dirname, '../src/index.js'),
                     // loader: 'postcss-loader',
                     options: {
-                       
+                        // plugins: [
+                        //     require('autoprefixer')
+                        // ]
                     }
                 }
             }]
