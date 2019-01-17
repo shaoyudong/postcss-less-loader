@@ -10,5 +10,8 @@ const reverseProps = postcss.plugin('reverseProps', () => {
 module.exports = {
     plugins: [
         reverseProps
-    ]
+    ],
+    alias: {
+        "@test": "/Users/shao/Documents/workspace/postcss-less-loader/test"
+    }
 };

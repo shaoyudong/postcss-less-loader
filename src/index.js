@@ -7,6 +7,15 @@ const validateOptions = require('schema-utils');
 const postcssrc = require('postcss-load-config');
 const SyntaxError = require('./Error');
 const Warning = require('./Warning.js');
+const getAliasFileManager = require('less-import-aliases');
+
+function getAlias(alias = {}) {
+    const result = {};
+    Object.keys(alias).forEach(key => {
+        result[key.replace(/^@/, '')] = alias[key];
+    });
+    return result;
+}
 
 module.exports = function(css, map, meta) {
     const options = Object.assign({}, getOptions(this));
@@ -62,6 +71,16 @@ module.exports = function(css, map, meta) {
         if (!config) {
           config = {}
         }
+        const alias = config.options && config.options.alias;
+        const lessPlugins = [
+            postcssLess({
+                plugins: [
+                    new getAliasFileManager({
+                        aliases: getAlias(alias)
+                    })
+                ]
+            })
+        ];
         let plugins = config.plugins || [];
         if (config.file) this.addDependency(config.file)
 
@@ -98,13 +117,12 @@ module.exports = function(css, map, meta) {
         if (sourceMap && map) {
           options.map.prev = map
         }
-        return postcss([
-            postcssLess()
-        ].concat(plugins))
+        return postcss(lessPlugins.concat(plugins))
                 .process(css, Object.assign({}, options, {
                     parser: postcssLess.parser
                 }))
                 .then(result => {
+                    console.log(result.css);
                     let { css, map, root, processor, messages } = result;
     
                     result.warnings().forEach((warning) => {

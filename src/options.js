@@ -14,9 +14,7 @@ module.exports = function parseOptions (params) {
   const options = {}
 
   if (typeof params !== 'undefined') {
-    options.parser = params.parser
-    options.syntax = params.syntax
-    options.stringifier = params.stringifier
+    options.alias = params.alias;
   }
 
   const exec = params && params.exec

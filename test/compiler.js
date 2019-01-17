@@ -14,15 +14,7 @@ module.exports = (fixture, options = {}) => {
         module: {
             rules: [{
                 test: /\.less$/,
-                use: {
-                    loader: path.join(__dirname, '../src/index.js'),
-                    // loader: 'postcss-loader',
-                    options: {
-                        // plugins: [
-                        //     require('autoprefixer')
-                        // ]
-                    }
-                }
+                use: [path.join(__dirname, '../src/index.js')]
             }]
         }
     });
