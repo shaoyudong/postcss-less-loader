@@ -5,7 +5,8 @@ const { getOptions } = require('loader-utils');
 const parseOptions = require('./options');
 const validateOptions = require('schema-utils');
 const postcssrc = require('postcss-load-config');
-const SyntaxError = require('./Error')
+const SyntaxError = require('./Error');
+const Warning = require('./Warning.js');
 
 module.exports = function(css, map, meta) {
     const options = Object.assign({}, getOptions(this));
