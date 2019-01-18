@@ -122,7 +122,6 @@ module.exports = function(css, map, meta) {
                     parser: postcssLess.parser
                 }))
                 .then(result => {
-                    console.log(result.css);
                     let { css, map, root, processor, messages } = result;
     
                     result.warnings().forEach((warning) => {
