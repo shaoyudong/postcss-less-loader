@@ -11,20 +11,24 @@ function myExec(script = '') {
         })
     });
 }
-myExec('git add .')
+myExec('npm publish')
+    .then(res => {
+        console.log(`npm publish success: 已发布版本v${version}`, res)
+        return myExec('git add .');
+    })
     .then(res => {
         return myExec(`git commit -m 'feat: v${version}'`);
     })
     .then(res => {
-        console.log(res);
+        console.log('commit success: ', res);
         return myExec(`git tag v${version}`);
     })
     .then(res => {
-        console.log(res);
+        console.log('new tag: ', res);
         return myExec(`git push && git push origin v${version}`)
     })
     .then(res => {
-        console.log('代码已提交到远程仓库');
+        console.log('push success: 代码已提交到远程仓库\n', res);
     })
     .catch(e => {
         console.log(e);
